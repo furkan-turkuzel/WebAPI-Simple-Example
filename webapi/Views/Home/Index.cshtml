@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<script>
+    $(document).ready(function myfunction() {
+        LoadData();
+        function LoadData() {
+            var ul = $("#shippers");
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:54322/api/shipper",
+                type: "json"
+            }).done(function myfunction(response) {
+                if (response == null) {
+                    alert("response hatası!!!");
+                    return;
+                }
+
+                for (var i = 0; i < response.length; i++) {
+                    var shipper = response[i];
+                    var li = "<li class='list-group-item'>ID : " + shipper.ShipperID + " - " + shipper.CompanyName + " - " + shipper.Phone + "</li>";
+                    ul.append(li);
+                }
+
+            }).fail(function myfunction(xhr, status, error) {
+                alert("hata oluştu", error);
+            })
+        }
+        
+        $("#Getir").click(function myfunction() {
+            var ID = $("#txtShipper").val();
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:54322/api/shipper/"+ID,
+                type: "json"
+            }).done(function myfunction(response) {
+                if (response == null) {
+                    alert("bu ID bulunamadı");
+                    return;
+                }
+
+                $("#txtcompany").val(response.CompanyName)
+                $("#txtphone").val(response.Phone);
+                })
+        })
+            $("#btnKaydet").click(function myfunction() {
+                var CompanyName = $("#txtcompany").val();
+                var Phone = $("#txtphone").val();
+                var shipper = {
+                    "CompanyName": CompanyName,
+                    "Phone": Phone
+                };
+                alert("girdi");
+                $.ajax({
+                    method: "POST",
+                    url: "http://localhost:54322/api/shipper",
+                    type: "json",
+                    data: shipper
+
+                }).done(function myfunction() {
+                    alert("Kaydetme işlemi başarıyla gerçekleşti");
+                    }).fail(function myfunction() {
+                        alert("Kayıt işlemi başarısız!!!");
+                    })
+            })
+
+
+            $("#btnGuncelle").click(function myfunction() {
+                var CompanyName = $("#txtcompany").val();
+                var Phone = $("#txtphone").val();
+                var ID = $("#txtShipper").val();
+
+                var shipper = {
+                    "CompanyName": CompanyName,
+                    "Phone" : Phone
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: "http://localhost:54322/api/shipper/" + ID,
+                    dataType: "json",
+                    data: shipper
+                }).done(function myfunction() {
+                    alert("Güncelleme işlemi başarılı");
+                    return;
+                    }).fail(function myfunction() {
+                        alert("güncelleme başarısız oldu!!!");
+                    })
+            })
+
+            $("#btnSil").click(function myfunction() {
+                var ID = $("#txtShipper").val();
+
+                $.ajax({
+                    type: "Delete",
+                    url: "http://localhost:54322/api/shipper/" + ID,
+                    dataType: "json",
+                }).done(function myfunction() {
+                    alert("Silme İşlemi başarılı");
+                    return;
+                    }).fail(function myfunction() {
+                        alert("Silme başarısız!!!");
+                    })
+            })
+
+
+    });
+</script>
+
+<div class="col-md-5">
+    <ul id="shippers" class="list-group"></ul>
+</div>
+
+<div class="col-md-2 active">
+
+</div>
+
+<div class="col-md-5">
+    <div class="row">
+        <div class="form-group">
+            ID : <input type="text" id="txtShipper"/>
+            <button class="btn btn-primary" id="Getir">Getir</button>
+        </div>
+        <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" id="txtcompany" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="txtphone" class="form-control" />
+        </div>
+        <div class="form-group">
+           <button id="btnKaydet" class="btn btn-success">Kaydet</button>
+           <button id="btnGuncelle" class="btn btn-primary">Güncelle</button>
+           <button id="btnSil" class="btn btn-danger">Sil</button>
+        </div>    
+        
+
+           
+
+        
+    </div>
+</div>

@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="Scripts/jquery-3.2.1.min.js"></script>
+    <script>
+        $(document).ready(function myfunction() {
+            var tr = $("#furkan");
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:54322/api/shipper",
+                type:"json"
+            }).done(function myfunction(response) {
+                for (var i = 0; i < response.length; i++) {
+                    var furk = response[i];
+                    var td = "<td>" + furk.CompanyName + "-" + furk.Phone + "</td>";
+                    tr.append(td);
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <table>
+        <tr id="furkan">
+
+        </tr>
+    </table>
+</body>
+</html>
